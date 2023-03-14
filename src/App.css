@@ -1,3 +1,11 @@
+:root {
+  --background-color: #282c34;
+  --background-hover-color: #2020206b;
+  --font-color: white;
+  --font-hover-color: #0497ff;
+}
+
+
 .App {
   text-align: center;
 }
@@ -14,7 +22,7 @@
 }
 
 .App-header, .App-body, .App {
-  background-color: #282c34;
+  background-color: var(--background-color);
   min-height: 10vh;
   display: flex;
   flex-direction: column;
@@ -50,6 +58,9 @@
 
 .App-body-header{
   min-height: 10vh;
+  display: inline-flex;
+  align-items: flex-end;
+  
 }
 
 .App-body-container{
@@ -66,4 +77,84 @@
 .App-body-image-refresh{
   width: 3vh;
   height: 3vh;
+}
+
+/* Table */
+table, tr{
+  border:.5px solid white;
+}
+
+.trash-button{
+  background: none;
+  border: none;
+}
+
+.filter-checkbox{
+  height: 24px;
+  width: 24px;
+}
+
+.processList.table{
+  border-collapse: collapse;
+}
+
+.App-list-content{
+  margin:auto;
+}
+
+th{
+  border-left:.5px solid white;
+  border-collapse: collapse;
+}
+
+.th-process{
+  min-width: 80%;
+  width: 80%;
+}
+
+
+.change-list-button{
+  width: 10vw;
+  height: 5vh;
+  min-width: 130px;
+  min-height: 30px;
+  border-radius: 50px;
+}
+
+.change-list-button:hover{
+  cursor: pointer;
+  background-color: silver;
+}
+
+
+
+.buttons-div{
+  display: inline-flex;
+  align-items: flex-end;
+}
+/* Header */
+
+/* Header Above Table*/
+
+
+
+/* Table Content*/
+
+.a-process{
+  cursor: pointer;
+}
+
+.a-process:hover{
+  color: var(--font-hover-color);
+}
+
+td.processName{
+  cursor: pointer;
+}
+td.processName:hover{
+  color: var(--font-hover-color);
+}
+
+tr.process:hover{
+  background-color: var(--background-hover-color);
 }

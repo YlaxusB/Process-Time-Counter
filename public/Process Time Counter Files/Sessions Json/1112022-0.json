@@ -1,0 +1,57 @@
+[
+  { "MainWindowTitle": null, "ProcessName": null, "Time": 0 },
+  {
+    "MainWindowTitle": "Windows Shell Experience Host",
+    "ProcessName": null,
+    "Time": 176
+  },
+  {
+    "MainWindowTitle": "Microsoft Text Input Application",
+    "ProcessName": null,
+    "Time": 176
+  },
+  {
+    "MainWindowTitle": "New Tab - Google Chrome",
+    "ProcessName": "chrome",
+    "Time": 0
+  },
+  { "MainWindowTitle": "Task Manager", "ProcessName": null, "Time": 176 },
+  { "MainWindowTitle": "Amigos - Discord", "ProcessName": null, "Time": 14 },
+  {
+    "MainWindowTitle": "NVIDIA GeForce Overlay",
+    "ProcessName": null,
+    "Time": 176
+  },
+  { "MainWindowTitle": "Victoria 3", "ProcessName": null, "Time": 165 },
+  {
+    "MainWindowTitle": "C:\\Users\\Giovane\\source\\repos\\ProcessTimeCounter\\bin\\Debug\\net5.0\\ProcessTimeCounter.exe",
+    "ProcessName": null,
+    "Time": 176
+  },
+  {
+    "MainWindowTitle": "(1) How do I get oil? : victoria3 - Google Chrome",
+    "ProcessName": null,
+    "Time": 103
+  },
+  {
+    "MainWindowTitle": "@zero_whomst - Discord",
+    "ProcessName": null,
+    "Time": 161
+  },
+  {
+    "MainWindowTitle": "O SUPER IMP\u00C9RIO BRASILEIRO no VICTORIA 3 - YouTube - Google Chrome",
+    "ProcessName": null,
+    "Time": 61
+  },
+  {
+    "MainWindowTitle": "(1) One Simple Question: Do I have to look at the realistic terrain mode : victoria3 - Google Chrome",
+    "ProcessName": "chrome",
+    "Time": 0
+  },
+  { "MainWindowTitle": "Settings", "ProcessName": null, "Time": 9 },
+  {
+    "MainWindowTitle": "Settings",
+    "ProcessName": "ApplicationFrameHost",
+    "Time": 0
+  }
+]
