@@ -11,6 +11,7 @@ import ProcessList from "./components/ProcessList";
 import Calendar from "./components/Calendar";
 import Overlay from "./components/Overlay";
 import GraphicsOverlay from "./components/visualGraphics/GraphicsOverlay";
+import { GraphicsProvider } from "./contexts/graphicsContext";
 
 const os = window.require("os");
 const username = os.userInfo().username;
@@ -208,22 +209,15 @@ function App() {
 
   return (
     <div className="App">
-      {isGraphicsOverlayOpen && (
-        <GraphicsOverlay
-          setOverlayState={setOverlayState}
-          // setCalendar={setCalendar}
-          // selectedInput={selectedInput}
-          // setDateFrom={setDateFrom}
-          // setDateTo={setDateTo}
-          // calendarState={calendarState}
-          // dateFrom={dateFrom}
-          // dateTo={dateTo}
-          // setSelectedInput={setSelectedInput}
-
-          chartProcessName={chartProcessName}
-          setIsGraphicsOverlayOpen={setIsGraphicsOverlayOpen}
-        ></GraphicsOverlay>
-      )}
+      <GraphicsProvider>
+        {isGraphicsOverlayOpen && (
+          <GraphicsOverlay
+            setOverlayState={setOverlayState}
+            chartProcessName={chartProcessName}
+            setIsGraphicsOverlayOpen={setIsGraphicsOverlayOpen}
+          ></GraphicsOverlay>
+        )}
+      </GraphicsProvider>
       {overlayState && <OverlayComponent></OverlayComponent>} {/* overlay for when open calendar */}
       <header className="App-header">
         <h1>Process Time Counter</h1>

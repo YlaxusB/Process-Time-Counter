@@ -21,7 +21,7 @@ const GraphicsOverlay = (props) => {
         // dateFrom={props.dateFrom}
         // dateTo={props.dateTo}
         // setSelectedInput={props.setSelectedInput}
-        
+
         chartProcessName={props.chartProcessName}
       ></GraphicsContent>
     </div>

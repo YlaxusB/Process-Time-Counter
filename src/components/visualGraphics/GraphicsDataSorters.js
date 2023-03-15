@@ -1,13 +1,34 @@
 import { readFileSync } from "fs";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { GraphicsContext } from "../../contexts/graphicsContext";
 import Calendar from "../Calendar";
 import { GetFilesNamesBetweenDates } from "./ChartUtilities";
 
 export const GraphicsDataSorters = (props) => {
+  const {
+    endDate,
+    startDate,
+    setEndDate,
+    setStartDate,
+    isComplete,
+    setIsComplete,
+    setOverlayState,
+    setTimeMultiplier,
+    setSeparateDataBy,
+    timePeriod,
+    timeMultiplier,
+    separateDataBy,
+    chartType,
+    setChartType,
+    setTimePeriod,
+  } = useContext(GraphicsContext);
+
+  useEffect(()=>{
+    console.log(startDate)
+  },[ startDate])
+
   const [period, setPeriod] = useState("last");
   const currentDate = new Date();
-
-  const [timePeriod, setTimePeriod] = useState("week");
 
   const [lastPeriodInput, setLastPeriodInput] = useState(2);
 
@@ -16,26 +37,12 @@ export const GraphicsDataSorters = (props) => {
 
   const [startDateDisplay, setStartDateDisplay] = useState("");
 
-  // setOverlayState={props.setOverlayState}
-  // setCalendar={props.setCalendar}
-  // selectedInput={props.selectedInput}
-  // setDateFrom={props.setDateFrom}
-  // setDateTo={props.setDateTo}
-  // calendarState={props.calendarState}
-  // dateFrom={props.dateFrom}
-  // dateTo={props.dateTo}
-  // period={period}
-  // setPeriod={setPeriod}
-  // setSelectedInput={props.setSelectedInput}
-
-  // setStartDate={props.dates.setStartDate}
-  // setEndDate={props.dates.setEndDate}
-
   // Handle the date changes
   useEffect(() => {
+    //setStartDate(new Date("10-3-2020"))
     if (period == "this") {
-      props.dates.setStartDate(GetStartOf(timePeriod, new Date())); // Set the start date to start of week/day/month/year
-      props.dates.setEndDate(new Date());
+      setStartDate(GetStartOf(timePeriod, new Date())); // Set the start date to start of week/day/month/year
+      setEndDate(new Date());
     } else if (period == "last") {
       // The multiplier for options in the last week/day/month/year
       const lastMultiplier = 1;
@@ -51,7 +58,7 @@ export const GraphicsDataSorters = (props) => {
         lastMultiplier = 365;
       }
 
-      if (props.isComplete == "true") {
+      if (isComplete == "true") {
         // Complete
 
         const firstDayCurrentPeriod = GetStartOf(timePeriod, new Date());
@@ -60,24 +67,24 @@ export const GraphicsDataSorters = (props) => {
         let previousCompletePeriod = new Date();
         previousCompletePeriod.setDate(firstDayCurrentPeriod.getDate() - 1);
 
-        let startDate = new Date(firstDayCurrentPeriod);
+        let newStartDate = new Date(firstDayCurrentPeriod);
         //startDate.setDate(previousCompletePeriod.getDate() - lastPeriodInput * lastMultiplier);
 
         if (timePeriod == "day") {
-          startDate.setDate(startDate.getDate() - lastPeriodInput);
+          newStartDate.setDate(startDate.getDate() - lastPeriodInput);
         } else if (timePeriod == "week") {
-          startDate.setDate(startDate.getDate() - lastPeriodInput * 7);
+          newStartDate.setDate(startDate.getDate() - lastPeriodInput * 7);
         } else if (timePeriod == "month") {
-          startDate.setMonth(startDate.getMonth() - lastPeriodInput);
+          newStartDate.setMonth(startDate.getMonth() - lastPeriodInput);
         } else if (timePeriod == "year") {
-          startDate.setFullYear(startDate.getFullYear() - lastPeriodInput);
+          newStartDate.setFullYear(startDate.getFullYear() - lastPeriodInput);
         }
 
         let endDate = new Date();
         endDate.setDate(firstDayCurrentPeriod.getDate() - 1);
 
-        props.dates.setStartDate(startDate);
-        props.dates.setEndDate(endDate);
+        setStartDate(startDate);
+        setEndDate(endDate);
       } else {
         // Incomplete
 
@@ -95,33 +102,34 @@ export const GraphicsDataSorters = (props) => {
           return newDate;
         };
 
-        let startDate = timePeriod == "month" ? getMonthStartDate(finalLastPeriodInput) : new Date(firstDayCurrentPeriod);
+        let newStartDate = timePeriod == "month" ? getMonthStartDate(finalLastPeriodInput) : new Date(firstDayCurrentPeriod);
         //startDate.setDate(previousCompletePeriod.getDate() - lastPeriodInput * lastMultiplier);
 
         if (timePeriod == "day") {
-          startDate.setDate(startDate.getDate() - finalLastPeriodInput);
+          newStartDate.setDate(startDate.getDate() - finalLastPeriodInput);
         } else if (timePeriod == "week") {
-          startDate.setDate(startDate.getDate() - finalLastPeriodInput * 7);
+          newStartDate.setDate(startDate.getDate() - finalLastPeriodInput * 7);
         } else if (timePeriod == "month") {
-          startDate.setDate(1);
+          newStartDate.setDate(1);
         } else if (timePeriod == "year") {
-          startDate.setFullYear(startDate.getFullYear() - finalLastPeriodInput);
+          newStartDate.setFullYear(startDate.getFullYear() - finalLastPeriodInput);
         }
 
         let endDate = new Date();
 
-        props.dates.setStartDate(startDate);
-        props.dates.setEndDate(endDate);
+        setStartDate(newStartDate);
+        setEndDate(endDate);
       }
     }
-  }, [timePeriod, period, lastPeriodInput, props.isComplete, props.timeMultiplier, props.dateFrom, props.dateTo]);
+  }, [timePeriod, period, lastPeriodInput, isComplete, timeMultiplier]);
 
   return (
     <div className="graphics-header-bottomButtons">
       Chart Style:
-      <select value={props.chartType} onChange={(e) => props.setChartType(e.target.value)}>
+      <select value={chartType} onChange={(e) => setChartType(e.target.value)}>
         <option value={"barChart"}>Bar Chart</option>
         <option value={"lineChart"}>Line Chart</option>
+        {console.log("eae : " + startDate)}
         {/* <option value={"pieChart"}>Pie Chart</option> */}
       </select>
       {period == "last" && (
@@ -131,28 +139,28 @@ export const GraphicsDataSorters = (props) => {
           setTimePeriod={setTimePeriod}
           timePeriod={timePeriod}
           setLastPeriodInput={setLastPeriodInput}
-          setIsComplete={props.setIsComplete}
+          setIsComplete={setIsComplete}
         />
       )}
       {period == "this" && <ThisPeriod period={period} setPeriod={setPeriod} setTimePeriod={setTimePeriod} timePeriod={timePeriod} />}
       {period == "customPeriod" && (
         <CustomPeriod
-          setOverlayState={props.setOverlayState}
+          setOverlayState={setOverlayState}
           setCalendar={setCalendar}
           selectedInput={selectedInput}
           calendarState={calendarState}
           period={period}
           setPeriod={setPeriod}
           setSelectedInput={setSelectedInput}
-          setStartDate={props.dates.setStartDate}
-          setEndDate={props.dates.setEndDate}
-          startDate={props.dates.startDate}
-          endDate={props.dates.endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          startDate={startDate}
+          endDate={endDate}
           startDateDisplay={startDateDisplay}
         />
       )}
-      <ShowTimeIn timeMultiplier={props.timeMultiplier} setTimeMultiplier={props.setTimeMultiplier} />
-      <SeparetedBy separateDataBy={props.separateDataBy} setSeparateDataBy={props.setSeparateDataBy} />
+      <ShowTimeIn timeMultiplier={timeMultiplier} setTimeMultiplier={setTimeMultiplier} />
+      <SeparetedBy separateDataBy={separateDataBy} setSeparateDataBy={setSeparateDataBy} />
     </div>
   );
 };
@@ -330,7 +338,7 @@ const SeparetedBy = (props) => {
   return (
     <div className="last-period-div">
       Separate Data By:
-      <select onChange={(e)=>props.setSeparateDataBy(e.target.value)} value={props.separateDataBy}>
+      <select onChange={(e) => props.setSeparateDataBy(e.target.value)} value={props.separateDataBy}>
         <option value={"days"}>Days</option>
         <option value={"weeks"}>Weeks</option>
         <option value={"months"}>Months</option>
