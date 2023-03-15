@@ -13,14 +13,14 @@ const GraphicsOverlay = (props) => {
       </button>
       <GraphicsContent
         setOverlayState={props.setOverlayState}
-        setCalendar={props.setCalendar}
-        selectedInput={props.selectedInput}
-        setDateFrom={props.setDateFrom}
-        setDateTo={props.setDateTo}
-        calendarState={props.calendarState}
-        dateFrom={props.dateFrom}
-        dateTo={props.dateTo}
-        setSelectedInput={props.setSelectedInput}
+        // setCalendar={props.setCalendar}
+        // selectedInput={props.selectedInput}
+        // setDateFrom={props.setDateFrom}
+        // setDateTo={props.setDateTo}
+        // calendarState={props.calendarState}
+        // dateFrom={props.dateFrom}
+        // dateTo={props.dateTo}
+        // setSelectedInput={props.setSelectedInput}
         
         chartProcessName={props.chartProcessName}
       ></GraphicsContent>

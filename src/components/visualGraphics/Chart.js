@@ -4,7 +4,6 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, Lege
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 export const Chart = (props) => {
-  console.log(props.data);
   const data = props.data;
   const chartType = props.chartType;
   if (chartType == "lineChart") {

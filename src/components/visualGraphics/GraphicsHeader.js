@@ -19,14 +19,17 @@ const GraphicsHeader = (props) => {
         setTimeMultiplier={props.setTimeMultiplier}
 
         setOverlayState={props.setOverlayState}
-        setCalendar={props.setCalendar}
-        selectedInput={props.selectedInput}
-        setDateFrom={props.setDateFrom}
-        setDateTo={props.setDateTo}
-        calendarState={props.calendarState}
-        dateFrom={props.dateFrom}
-        dateTo={props.dateTo}
-        setSelectedInput={props.setSelectedInput}
+
+        separateDataBy={props.separateDataBy}
+        setSeparateDataBy={props.setSeparateDataBy}
+        // setCalendar={props.setCalendar}
+        // selectedInput={props.selectedInput}
+        // setDateFrom={props.setDateFrom}
+        // setDateTo={props.setDateTo}
+        // calendarState={props.calendarState}
+        // dateFrom={props.dateFrom}
+        // dateTo={props.dateTo}
+        // setSelectedInput={props.setSelectedInput}
       />
     </div>
   );

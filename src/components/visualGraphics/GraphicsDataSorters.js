@@ -11,21 +11,30 @@ export const GraphicsDataSorters = (props) => {
 
   const [lastPeriodInput, setLastPeriodInput] = useState(2);
 
-  const CalendarComponent = React.memo(() => {
-    return (
-      <Calendar
-        setOverlayState={props.setOverlayState}
-        setCalendar={props.setCalendar}
-        setDate={props.selectedInput == "from" ? props.setDateFrom : props.setDateTo}
-      ></Calendar>
-    );
-  }, [props.setDateFrom, props.selectedInput]);
+  const [selectedInput, setSelectedInput] = useState("");
+  const [calendarState, setCalendar] = useState(false);
+
+  const [startDateDisplay, setStartDateDisplay] = useState("");
+
+  // setOverlayState={props.setOverlayState}
+  // setCalendar={props.setCalendar}
+  // selectedInput={props.selectedInput}
+  // setDateFrom={props.setDateFrom}
+  // setDateTo={props.setDateTo}
+  // calendarState={props.calendarState}
+  // dateFrom={props.dateFrom}
+  // dateTo={props.dateTo}
+  // period={period}
+  // setPeriod={setPeriod}
+  // setSelectedInput={props.setSelectedInput}
+
+  // setStartDate={props.dates.setStartDate}
+  // setEndDate={props.dates.setEndDate}
 
   // Handle the date changes
   useEffect(() => {
     if (period == "this") {
       props.dates.setStartDate(GetStartOf(timePeriod, new Date())); // Set the start date to start of week/day/month/year
-      console.log(GetStartOf(timePeriod, new Date()));
       props.dates.setEndDate(new Date());
     } else if (period == "last") {
       // The multiplier for options in the last week/day/month/year
@@ -94,7 +103,6 @@ export const GraphicsDataSorters = (props) => {
         } else if (timePeriod == "week") {
           startDate.setDate(startDate.getDate() - finalLastPeriodInput * 7);
         } else if (timePeriod == "month") {
-          console.log(startDate);
           startDate.setDate(1);
         } else if (timePeriod == "year") {
           startDate.setFullYear(startDate.getFullYear() - finalLastPeriodInput);
@@ -104,11 +112,9 @@ export const GraphicsDataSorters = (props) => {
 
         props.dates.setStartDate(startDate);
         props.dates.setEndDate(endDate);
-        console.log(startDate);
-        console.log(endDate);
       }
     }
-  }, [timePeriod, period, lastPeriodInput, props.isComplete, props.timeMultiplier]);
+  }, [timePeriod, period, lastPeriodInput, props.isComplete, props.timeMultiplier, props.dateFrom, props.dateTo]);
 
   return (
     <div className="graphics-header-bottomButtons">
@@ -132,19 +138,21 @@ export const GraphicsDataSorters = (props) => {
       {period == "customPeriod" && (
         <CustomPeriod
           setOverlayState={props.setOverlayState}
-          setCalendar={props.setCalendar}
-          selectedInput={props.selectedInput}
-          setDateFrom={props.setDateFrom}
-          setDateTo={props.setDateTo}
-          calendarState={props.calendarState}
-          dateFrom={props.dateFrom}
-          dateTo={props.dateTo}
+          setCalendar={setCalendar}
+          selectedInput={selectedInput}
+          calendarState={calendarState}
           period={period}
           setPeriod={setPeriod}
-          setSelectedInput={props.setSelectedInput}
+          setSelectedInput={setSelectedInput}
+          setStartDate={props.dates.setStartDate}
+          setEndDate={props.dates.setEndDate}
+          startDate={props.dates.startDate}
+          endDate={props.dates.endDate}
+          startDateDisplay={startDateDisplay}
         />
       )}
       <ShowTimeIn timeMultiplier={props.timeMultiplier} setTimeMultiplier={props.setTimeMultiplier} />
+      <SeparetedBy separateDataBy={props.separateDataBy} setSeparateDataBy={props.setSeparateDataBy} />
     </div>
   );
 };
@@ -188,20 +196,23 @@ const ThisPeriod = (props) => {
 };
 
 const CustomPeriod = (props) => {
+  const CalendarComponent = React.memo(() => {
+    return (
+      <Calendar
+        setOverlayState={props.setOverlayState}
+        setCalendar={props.setCalendar}
+        setDate={props.selectedInput == "from" ? props.setStartDate : props.setEndDate}
+      ></Calendar>
+    );
+  }, [props.setStartDate, props.selectedInput]);
+
   return (
     <div className="custom-period-div">
       <PeriodSelect setPeriod={props.setPeriod} period={props.period} />
+
       <div style={{ display: "inline", position: "relative" }}>
         {props.calendarState && props.selectedInput === "from" && <CalendarComponent />}
         <input
-          className="date-input"
-          type={"text"}
-          value={`${props.dateFrom.getDate()}/${props.dateFrom.getMonth() + 1}/${props.dateFrom.getFullYear()}`}
-          onClick={() => {
-            props.setSelectedInput("from");
-            props.setCalendar(!props.calendarState);
-            props.setOverlayState(!props.overlayState);
-          }}
           onChange={(e) => {
             const input = e.target.value;
             var splited = input.split("-");
@@ -211,8 +222,17 @@ const CustomPeriod = (props) => {
             date.setFullYear(parseFloat(splited[2]));
             props.setDateFrom(date);
           }}
+          className="date-input"
+          type={"text"}
+          value={`${props.startDate.getDate()}/${props.startDate.getMonth() + 1}/${props.startDate.getFullYear()}`}
+          onClick={() => {
+            props.setSelectedInput("from");
+            props.setCalendar(!props.calendarState);
+            props.setOverlayState(!props.overlayState);
+          }}
         ></input>
       </div>
+
       <div style={{ display: "inline", position: "relative" }}>
         {props.calendarState && props.selectedInput === "to" && <CalendarComponent />}
         <input
@@ -223,7 +243,7 @@ const CustomPeriod = (props) => {
             props.setOverlayState(!props.overlayState);
           }}
           type={"text"}
-          value={`${props.dateTo.getDate()}/${props.dateTo.getMonth() + 1}/${props.dateTo.getFullYear()}`}
+          value={`${props.endDate.getDate()}/${props.endDate.getMonth() + 1}/${props.endDate.getFullYear()}`}
           onChange={(e) => {
             const input = e.target.value;
             var splited = input.split("-");
@@ -304,6 +324,20 @@ const GetStartOf = (timePeriod, date) => {
   console.log(firstDayOfWeek); // output: Sun Feb 27 2022 23:47:10 GMT-0500 (Eastern Standard Time)
   console.log(firstDayOfMonth); // output: Mon Feb 01 2022 00:00:00 GMT-0500 (Eastern Standard Time)
   console.log(firstDayOfYear); // output: Sat Jan 01 2022 00:00:00 GMT-0500 (Eastern Standard Time)
+};
+
+const SeparetedBy = (props) => {
+  return (
+    <div className="last-period-div">
+      Separate Data By:
+      <select onChange={(e)=>props.setSeparateDataBy(e.target.value)} value={props.separateDataBy}>
+        <option value={"days"}>Days</option>
+        <option value={"weeks"}>Weeks</option>
+        <option value={"months"}>Months</option>
+        <option value={"years"}>Years</option>
+      </select>
+    </div>
+  );
 };
 
 // const GetStartOfMonth = ()=>{

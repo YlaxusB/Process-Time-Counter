@@ -211,14 +211,14 @@ function App() {
       {isGraphicsOverlayOpen && (
         <GraphicsOverlay
           setOverlayState={setOverlayState}
-          setCalendar={setCalendar}
-          selectedInput={selectedInput}
-          setDateFrom={setDateFrom}
-          setDateTo={setDateTo}
-          calendarState={calendarState}
-          dateFrom={dateFrom}
-          dateTo={dateTo}
-          setSelectedInput={setSelectedInput}
+          // setCalendar={setCalendar}
+          // selectedInput={selectedInput}
+          // setDateFrom={setDateFrom}
+          // setDateTo={setDateTo}
+          // calendarState={calendarState}
+          // dateFrom={dateFrom}
+          // dateTo={dateTo}
+          // setSelectedInput={setSelectedInput}
 
           chartProcessName={chartProcessName}
           setIsGraphicsOverlayOpen={setIsGraphicsOverlayOpen}

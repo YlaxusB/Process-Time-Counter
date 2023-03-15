@@ -17,7 +17,7 @@ export const GetFilesNamesBetweenDates = async (startDate = new Date(), endDate 
   let filesName = [];
   let allSessionsNames = fs.readdirSync(mainAppFolder + "/Sessions Json");
 
-  let currentIterationDate = startDate;
+  let currentIterationDate = new Date(startDate);
   for (let i = 0; i <= differenceDays; i++) {
     // Same formatting as the files name
     let currentIterationFormattedDate = `${(currentIterationDate.getMonth() + 1).toString().padStart(2, "0")}-${currentIterationDate

@@ -60,6 +60,8 @@ const GraphicsContent = (props) => {
 
   const [timeMultiplier, setTimeMultiplier] = useState(1); // The time used in the files are in minutes
 
+  const [separateDataBy, setSeparateDataBy] = useState("days");
+
   const [data, setData] = useState([
     { name: "Jan", value: 100 },
     { name: "Feb", value: 357 },
@@ -78,16 +80,14 @@ const GraphicsContent = (props) => {
   useEffect(() => {
     // Get the file names and check if they exists
     GetFilesNamesBetweenDates(startDate, endDate).then(async (filesNames) => {
-      console.log(startDate)
-      console.log(endDate)
       // Open the file by its name, and filters the files that dont have at least one of the specified processes
       let processFilters = [props.chartProcessName];
       const filteredFiles = await FilterFilesToSpecificProcesses(filesNames, processFilters);
 
-      const chartData = HandleChartData(filteredFiles, timePeriod, startDate, endDate, props.chartProcessName, timeMultiplier);
-      setData(chartData)
+      const chartData = HandleChartData(filteredFiles, timePeriod, startDate, endDate, props.chartProcessName, timeMultiplier, separateDataBy);
+      setData(chartData);
     });
-  }, [startDate, endDate, timePeriod, timeMultiplier]);
+  }, [startDate, endDate, timePeriod, timeMultiplier, separateDataBy]);
 
   return (
     <div className="graphics-content">
@@ -103,17 +103,17 @@ const GraphicsContent = (props) => {
           setIsComplete={setIsComplete}
           timeMultiplier={timeMultiplier}
           setTimeMultiplier={setTimeMultiplier}
-
           setOverlayState={props.setOverlayState}
-          setCalendar={props.setCalendar}
-          selectedInput={props.selectedInput}
-          setDateFrom={props.setDateFrom}
-          setDateTo={props.setDateTo}
-          calendarState={props.calendarState}
-          dateFrom={props.dateFrom}
-          dateTo={props.dateTo}
-          setSelectedInput={props.setSelectedInput}
-          
+          separateDataBy={separateDataBy}
+          setSeparateDataBy={setSeparateDataBy}
+          // setCalendar={props.setCalendar}
+          // selectedInput={props.selectedInput}
+          // setDateFrom={props.setDateFrom}
+          // setDateTo={props.setDateTo}
+          // calendarState={props.calendarState}
+          // dateFrom={props.dateFrom}
+          // dateTo={props.dateTo}
+          // setSelectedInput={props.setSelectedInput}
         ></GraphicsHeader>
 
         <Chart chartType={chartType} data={data}></Chart>
@@ -126,34 +126,106 @@ const GraphicsContent = (props) => {
   );
 };
 
-const HandleChartData = (filesName, timePeriod, startDate, endDate, chartProcessName, timeMultiplier) => {
+const HandleChartData = (filesName, timePeriod, startDate, endDate, chartProcessName, timeMultiplier, separateDataBy) => {
   let datesAndValues = [];
   // Read files and assign its name, date and time to datesAndValues
-  filesName.forEach((fileName) => {
+  for (let i = 0; i < filesName.length; i++) {
+    const fileName = filesName[i];
     const fileDate = new Date(fileName.split("-")[2], fileName.split("-")[0] - 1, fileName.split("-")[1]);
     const fileJson = readFileSync(mainAppFolder + "/Sessions Json/" + fileName);
     let processTime = fileJson.find((x) => x.MainWindowTitle === chartProcessName).Time;
-    datesAndValues.push({ name: fileName, date: fileDate, value: processTime });
+
+    // Check if prior element in array have the same date, if yes then merge them
+    let a = "a";
+    let b = "b";
+    if (i > 0) {
+      let c = datesAndValues.length;
+      a = datesAndValues[c - 1].name.split("-")[0] + "-" + datesAndValues[c - 1].name.split("-")[1] + "-" + datesAndValues[c - 1].name.split("-")[2];
+      b = fileName.split("-")[0] + "-" + fileName.split("-")[1] + "-" + fileName.split("-")[2];
+    }
+
+    if (i > 0 && a == b) {
+      datesAndValues[datesAndValues.length - 1].value += processTime;
+    } else {
+      datesAndValues.push({ name: fileName, date: fileDate, value: processTime });
+    }
+  }
+  filesName.forEach((fileName) => {});
+
+  // Create empty data
+  const differenceTime = endDate - startDate;
+  const differenceDays = Math.round(differenceTime / (1000 * 60 * 60 * 24));
+
+  let currentIterationDate = new Date(startDate);
+  for (let i = 0; i < differenceDays; i++) {
+    let currentIterationName = `${(currentIterationDate.getMonth() + 1).toString().padStart(2, "0")}-${currentIterationDate
+      .getDate()
+      .toString()
+      .padStart(2, "0")}-${currentIterationDate.getFullYear()}`;
+
+    if (!datesAndValues.some((x) => x.name.includes(currentIterationName))) {
+      const fileDate = new Date(currentIterationName.split("-")[2], currentIterationName.split("-")[0] - 1, currentIterationName.split("-")[1]);
+      const newData = { name: currentIterationName + "-0.json", date: fileDate, value: 0 };
+      datesAndValues.splice(i, 0, newData);
+    }
+    currentIterationDate.setDate(currentIterationDate.getDate() + 1);
+  }
+
+  // Multiply data by show time in
+  datesAndValues.forEach((element) => {
+    // day - month - year
+    const newName =
+      element.date.getDate().toString().padStart(2, "0") + "-" + (element.date.getMonth() + 1).toString().padStart(2, "0") + "-" + element.date.getFullYear();
+    datesAndValues[datesAndValues.indexOf(element)] = { name: newName, value: parseFloat((element.value / timeMultiplier).toFixed(2)), date: element.date };
   });
-  console.log(datesAndValues)
-  console.log(timePeriod)
-  switch (timePeriod) {
-    case "day":
-        let newData = [];
-        datesAndValues.forEach(element => {
-          // day - month - year
-          const newName = element.date.getDate() + "-" + (element.date.getMonth() + 1) + "-" + element.date.getFullYear(); 
-          newData.push({name:newName, value:parseFloat((element.value / timeMultiplier).toFixed(2))})
+
+  console.log(datesAndValues);
+
+  // Separate data by
+  switch (separateDataBy) {
+    case "days":
+      return datesAndValues;
+      break;
+    case "weeks":
+      break;
+    case "months":
+      let newData = [];
+      console.log(endDate)
+      console.log(startDate)
+      const differenceMonths = Math.min(differenceInMonths(endDate, startDate), 1);
+      console.log(differenceMonths)
+      let currentMonth = new Date(startDate);
+      console.log(differenceMonths);
+      for (let i = 0; i < differenceMonths; i++) {
+        currentMonth.setDate(1);
+        const currentMonthName = `${(currentMonth.getMonth() + 1).toString().padStart(2, "0")}-${currentMonth.getFullYear()}`;
+        const today = new Date();
+        
+        var lastDayOfMonth = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
+        let newMonth = datesAndValues.filter((x) => {
+          console.log(x.date);
+          console.log(startDate);
+          console.log(endDate);
+          console.log(new Date(x.date) >= startDate)
+          console.log(new Date(x.date) <= lastDayOfMonth)
+          return x.date >= startDate && x.date <= lastDayOfMonth;
         });
-        return newData;
-      break;
-    case "week":
-      break;
-    case "month":
-      break;
-    case "year":
+        console.log(datesAndValues);
+        console.log(newMonth);
+        newData = [...newData, newMonth];
+      }
+      console.log(newData);
+      return newData[0];
+    case "years":
       break;
   }
 };
+
+function differenceInMonths(date1, date2) {
+  const monthDiff = date1.getMonth() - date2.getMonth();
+  const yearDiff = date1.getYear() - date2.getYear();
+
+  return monthDiff + yearDiff * 12;
+}
 
 export { GraphicsContent };
