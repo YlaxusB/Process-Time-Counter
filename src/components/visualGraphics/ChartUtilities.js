@@ -4,13 +4,6 @@ const username = os.userInfo().username;
 const mainAppFolder = `C:/Users/${username}/AppData/Roaming/Process Time Counter`;
 
 export const GetFilesNamesBetweenDates = async (startDate = new Date(), endDate = new Date()) => {
-  //   console.log(endDate.getDate()); // month starts from 0
-  //   console.log(endDate.getMonth());
-  //   console.log(endDate.getFullYear());
-
-  //Sat Mar 04 2023 01:18:06 GMT-0300 (GMT-03:00)
-  //Sun Mar 05 2023 01:18:06 GMT-0300 (GMT-03:00)
-
   let differenceTime = endDate - startDate;
   let differenceDays = Math.round(differenceTime / (1000 * 60 * 60 * 24));
 

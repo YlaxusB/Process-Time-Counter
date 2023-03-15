@@ -5,23 +5,18 @@ import "./components/Calendar.css";
 import "./components/Header.css";
 import "./components/Table.css";
 import "./components/visualGraphics/Graphics.css";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import ProcessList from "./components/ProcessList";
 import Calendar from "./components/Calendar";
 import Overlay from "./components/Overlay";
 import GraphicsOverlay from "./components/visualGraphics/GraphicsOverlay";
-import { GraphicsProvider } from "./contexts/graphicsContext";
+import { GraphicsContext, GraphicsProvider } from "./contexts/graphicsContext";
 
 const os = window.require("os");
 const username = os.userInfo().username;
 const mainAppFolder = `C:/Users/${username}/AppData/Roaming/Process Time Counter`;
 
-// const readFile = async (path) => {
-//   const rawResponse = await fetch(path);
-//   const response = await rawResponse.json();
-//   return response;
-// };
 const fs = window.require("fs");
 
 export const readFileSync = (path) => {
@@ -75,8 +70,7 @@ function App() {
 
   const [inRangeProcesses, setInRangeProcesses] = useState([]);
 
-  const [isGraphicsOverlayOpen, setIsGraphicsOverlayOpen] = useState(true);
-  const [chartProcessName, setChartProcessName] = useState("Microsoft Text Input Application");
+  const [isGraphicsOverlayOpen, setIsGraphicsOverlayOpen] = useState(false);
 
   const [sortMode, setSortMode] = useState({
     mode: "alphabetical",
@@ -141,26 +135,7 @@ function App() {
     });
     //return new Promise((resolve, reject) => resolve(filesInRange));
     return await filesInRange;
-    // Processes to insert into table
-    let processesToSet = [];
-
-    ////// Daqui -------------------------------------------------------------------------------------------
-    for (let i = 0; i < filesInRange.length; i++) {
-      let json = await readFileSync(mainAppFolder + "/Sessions Json/" + filesInRange[i] + ".json");
-      let toConcat = filesInRange.map((element) => {
-        if (processesToSet.find((x) => x == element)) {
-          processesToSet[processesToSet.find((x) => x == element)].Time += 1;
-        }
-      });
-      processesToSet.push();
-      ////// Até aqui só fiz merda, refaz essa porra ---------------------------------------------------------------
-    }
-    setInRangeProcesses(processesToSet);
   };
-
-  function call(callback) {
-    callback();
-  }
 
   const GetProcessesBetweenDates = async () => {
     let dates = await GetDatesBetweenTwoDates();
@@ -213,11 +188,9 @@ function App() {
         {isGraphicsOverlayOpen && (
           <GraphicsOverlay
             setOverlayState={setOverlayState}
-            chartProcessName={chartProcessName}
             setIsGraphicsOverlayOpen={setIsGraphicsOverlayOpen}
           ></GraphicsOverlay>
         )}
-      </GraphicsProvider>
       {overlayState && <OverlayComponent></OverlayComponent>} {/* overlay for when open calendar */}
       <header className="App-header">
         <h1>Process Time Counter</h1>
@@ -333,7 +306,6 @@ function App() {
               style={{ width: "100%" }}
               isGraphicsOverlayOpen={isGraphicsOverlayOpen}
               setIsGraphicsOverlayOpen={setIsGraphicsOverlayOpen}
-              setChartProcessName={setChartProcessName}
               overlayState={overlayState}
               setOverlayState={setOverlayState}
               useEffect
@@ -357,6 +329,7 @@ function App() {
 
         <div className="App-body-bottom"></div>
       </div>
+      </GraphicsProvider>
     </div>
   );
 }

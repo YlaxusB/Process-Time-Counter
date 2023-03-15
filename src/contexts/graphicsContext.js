@@ -19,7 +19,7 @@ export const GraphicsProvider = ({ children }) => {
   const [timeMultiplier, setTimeMultiplier] = useState(1);
   const [overlayState, setOverlayState] = useState(false);
   const [separateDataBy, setSeparateDataBy] = useState("days");
-
+  const [chartProcessName, setChartProcessName] = useState("Microsoft Text Input Application");
 
   return (
     <GraphicsContext.Provider
@@ -40,6 +40,8 @@ export const GraphicsProvider = ({ children }) => {
         setOverlayState,
         separateDataBy,
         setSeparateDataBy,
+        chartProcessName,
+        setChartProcessName,
       }}
     >
       {children}

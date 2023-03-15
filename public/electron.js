@@ -11,7 +11,6 @@ const {
   globalShortcut,
   nativeImage,
 } = require("electron");
-console.log(app.getPath("appData"));
 const isDev = require("electron-is-dev");
 
 const log = require("electron-log");
@@ -92,9 +91,6 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", function () {
-  console.log(
-    "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
-  );
   const win = createWindow();
   globalShortcut.register("CommandOrControl+Shift+Alt+H", () => {
     win.show();
@@ -114,9 +110,4 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
-});
-
-app.on("/teste", (request, response) => {
-  console.log("puts, era isso mesmo");
-  response.json("eae");
 });

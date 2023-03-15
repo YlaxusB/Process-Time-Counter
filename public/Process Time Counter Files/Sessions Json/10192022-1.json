@@ -1,1 +1,20 @@
-[{"MainWindowTitle":null,"ProcessName":null,"Time":0},{"MainWindowTitle":"Microsoft Text Input Application","ProcessName":"TextInputHost","Time":0},{"MainWindowTitle":"#geral | Servidor Anti-Fascista - Discord","ProcessName":"Discord","Time":0},{"MainWindowTitle":"Settings","ProcessName":"SystemSettings","Time":0},{"MainWindowTitle":"Calculator","ProcessName":"ApplicationFrameHost","Time":0},{"MainWindowTitle":"Calculator","ProcessName":"Calculator","Time":0},{"MainWindowTitle":"localhost:3000/ProcessTimeCounterFiles/Others/TemporaryProcesses.json - Google Chrome","ProcessName":"chrome","Time":0},{"MainWindowTitle":"Task Manager","ProcessName":"Taskmgr","Time":0},{"MainWindowTitle":"CPUID HWMonitor","ProcessName":"HWMonitor","Time":0},{"MainWindowTitle":"C:\\WINDOWS\\system32\\cmd.exe ","ProcessName":"cmd","Time":0},{"MainWindowTitle":"React App","ProcessName":"electron","Time":0},{"MainWindowTitle":"App.js - reactapp - Visual Studio Code","ProcessName":"Code","Time":0},{"MainWindowTitle":"ProcessTimeCounter (Running) - Microsoft Visual Studio","ProcessName":"devenv","Time":0},{"MainWindowTitle":"C:\\Users\\Giovane\\source\\repos\\ProcessTimeCounter\\bin\\Debug\\net5.0\\ProcessTimeCounter.exe","ProcessName":"VsDebugConsole","Time":0}]
+[
+  { "MainWindowTitle": null, "ProcessName": null, "Time": 0 },
+  { "MainWindowTitle": "Microsoft Text Input Application", "ProcessName": "TextInputHost", "Time": 0 },
+  { "MainWindowTitle": "#geral | Servidor Anti-Fascista - Discord", "ProcessName": "Discord", "Time": 0 },
+  { "MainWindowTitle": "Settings", "ProcessName": "SystemSettings", "Time": 0 },
+  { "MainWindowTitle": "Calculator", "ProcessName": "ApplicationFrameHost", "Time": 0 },
+  { "MainWindowTitle": "Calculator", "ProcessName": "Calculator", "Time": 0 },
+  { "MainWindowTitle": "localhost:3000/ProcessTimeCounterFiles/Others/TemporaryProcesses.json - Google Chrome", "ProcessName": "chrome", "Time": 0 },
+  { "MainWindowTitle": "Task Manager", "ProcessName": "Taskmgr", "Time": 0 },
+  { "MainWindowTitle": "CPUID HWMonitor", "ProcessName": "HWMonitor", "Time": 0 },
+  { "MainWindowTitle": "C:\\WINDOWS\\system32\\cmd.exe ", "ProcessName": "cmd", "Time": 0 },
+  { "MainWindowTitle": "React App", "ProcessName": "electron", "Time": 0 },
+  { "MainWindowTitle": "App.js - reactapp - Visual Studio Code", "ProcessName": "Code", "Time": 0 },
+  { "MainWindowTitle": "ProcessTimeCounter (Running) - Microsoft Visual Studio", "ProcessName": "devenv", "Time": 0 },
+  {
+    "MainWindowTitle": "C:\\Users\\Giovane\\source\\repos\\ProcessTimeCounter\\bin\\Debug\\net5.0\\ProcessTimeCounter.exe",
+    "ProcessName": "VsDebugConsole",
+    "Time": 0
+  }
+]

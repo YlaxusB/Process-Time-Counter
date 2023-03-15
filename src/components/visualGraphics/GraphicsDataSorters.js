@@ -23,10 +23,6 @@ export const GraphicsDataSorters = (props) => {
     setTimePeriod,
   } = useContext(GraphicsContext);
 
-  useEffect(()=>{
-    console.log(startDate)
-  },[ startDate])
-
   const [period, setPeriod] = useState("last");
   const currentDate = new Date();
 
@@ -68,23 +64,33 @@ export const GraphicsDataSorters = (props) => {
         previousCompletePeriod.setDate(firstDayCurrentPeriod.getDate() - 1);
 
         let newStartDate = new Date(firstDayCurrentPeriod);
-        //startDate.setDate(previousCompletePeriod.getDate() - lastPeriodInput * lastMultiplier);
+
+        let newEndDate = new Date();
+        // newEndDate.setDate(firstDayCurrentPeriod.getDate() - 1);
 
         if (timePeriod == "day") {
-          newStartDate.setDate(startDate.getDate() - lastPeriodInput);
+          newStartDate.setDate(newStartDate.getDate() - lastPeriodInput);
+          newEndDate = new Date(newStartDate)
+          newEndDate.setDate(newEndDate.getDate() + (lastPeriodInput - 1))
         } else if (timePeriod == "week") {
-          newStartDate.setDate(startDate.getDate() - lastPeriodInput * 7);
+          newStartDate.setDate(newStartDate.getDate() - lastPeriodInput * 7);
+          newEndDate = new Date(newStartDate)
+          newEndDate.setDate(newEndDate.getDate() + lastPeriodInput * 7 - 1)
         } else if (timePeriod == "month") {
-          newStartDate.setMonth(startDate.getMonth() - lastPeriodInput);
+          newStartDate.setMonth(newStartDate.getMonth() - lastPeriodInput);
+          newEndDate = new Date(newStartDate)
+          newEndDate.setMonth(newEndDate.getMonth() + lastPeriodInput)
+          newEndDate.setDate(newEndDate.getDate() - 1)
         } else if (timePeriod == "year") {
-          newStartDate.setFullYear(startDate.getFullYear() - lastPeriodInput);
+          newStartDate.setFullYear(newStartDate.getFullYear() - (lastPeriodInput - 1));
+          newEndDate = new Date(newStartDate)
+          newEndDate.setMonth(0)
+          newEndDate.setDate(0)
+          newEndDate.setFullYear(newEndDate.getFullYear() + (lastPeriodInput - 1))
         }
 
-        let endDate = new Date();
-        endDate.setDate(firstDayCurrentPeriod.getDate() - 1);
-
-        setStartDate(startDate);
-        setEndDate(endDate);
+        setStartDate(newStartDate);
+        setEndDate(newEndDate);
       } else {
         // Incomplete
 
@@ -98,7 +104,7 @@ export const GraphicsDataSorters = (props) => {
 
         const getMonthStartDate = (finalLastPeriodInput) => {
           let newDate = new Date();
-          newDate.setMonth(newDate.getMonth() - lastPeriodInput);
+          newDate.setMonth(newDate.getMonth() - finalLastPeriodInput);
           return newDate;
         };
 
@@ -106,19 +112,19 @@ export const GraphicsDataSorters = (props) => {
         //startDate.setDate(previousCompletePeriod.getDate() - lastPeriodInput * lastMultiplier);
 
         if (timePeriod == "day") {
-          newStartDate.setDate(startDate.getDate() - finalLastPeriodInput);
+          newStartDate.setDate(newStartDate.getDate() - finalLastPeriodInput);
         } else if (timePeriod == "week") {
-          newStartDate.setDate(startDate.getDate() - finalLastPeriodInput * 7);
+          newStartDate.setDate(newStartDate.getDate() - finalLastPeriodInput * 7);
         } else if (timePeriod == "month") {
           newStartDate.setDate(1);
         } else if (timePeriod == "year") {
-          newStartDate.setFullYear(startDate.getFullYear() - finalLastPeriodInput);
+          newStartDate.setFullYear(newStartDate.getFullYear() - finalLastPeriodInput);
         }
 
-        let endDate = new Date();
+        let newEndDate = new Date();
 
         setStartDate(newStartDate);
-        setEndDate(endDate);
+        setEndDate(newEndDate);
       }
     }
   }, [timePeriod, period, lastPeriodInput, isComplete, timeMultiplier]);
@@ -129,7 +135,6 @@ export const GraphicsDataSorters = (props) => {
       <select value={chartType} onChange={(e) => setChartType(e.target.value)}>
         <option value={"barChart"}>Bar Chart</option>
         <option value={"lineChart"}>Line Chart</option>
-        {console.log("eae : " + startDate)}
         {/* <option value={"pieChart"}>Pie Chart</option> */}
       </select>
       {period == "last" && (
@@ -328,10 +333,6 @@ const GetStartOf = (timePeriod, date) => {
   }
 
   return firstDay;
-
-  console.log(firstDayOfWeek); // output: Sun Feb 27 2022 23:47:10 GMT-0500 (Eastern Standard Time)
-  console.log(firstDayOfMonth); // output: Mon Feb 01 2022 00:00:00 GMT-0500 (Eastern Standard Time)
-  console.log(firstDayOfYear); // output: Sat Jan 01 2022 00:00:00 GMT-0500 (Eastern Standard Time)
 };
 
 const SeparetedBy = (props) => {

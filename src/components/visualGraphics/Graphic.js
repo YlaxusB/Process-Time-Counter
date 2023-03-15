@@ -16,7 +16,6 @@ const Graphic = () => {
 
   useEffect(() => {
     // The DOM element is accessible here.
-    console.log(ref.current);
     const asd = Chart(
       ref.current,
       {

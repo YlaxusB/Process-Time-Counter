@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { GraphicsContext } from "../contexts/graphicsContext";
 const fs = window.require("fs");
 import { ListButtons } from "./ListButtons";
 import GraphicsOverlay from "./visualGraphics/GraphicsOverlay";
@@ -9,6 +10,7 @@ const username = os.userInfo().username;
 const mainAppFolder = `C:/Users/${username}/AppData/Roaming/Process Time Counter`;
 
 const ProcessList = (props) => {
+  const {setChartProcessName} = useContext(GraphicsContext);
   //const [isGraphicsOverlayOpen, setIsGraphicsOverlayOpen] = useState(false);
 
   // Check if date range is enabled
@@ -74,7 +76,7 @@ const ProcessList = (props) => {
           <tr
             className="process"
             key={index}
-            onClick={() => processNameClicked(props.isGraphicsOverlayOpen, props.setIsGraphicsOverlayOpen, element.MainWindowTitle, props.setChartProcessName)}
+            onClick={() => processNameClicked(props.isGraphicsOverlayOpen, props.setIsGraphicsOverlayOpen, element.MainWindowTitle, setChartProcessName)}
           >
             <td className="processName" title={element.MainWindowTitle}>
               {abbreviatedProcessName}

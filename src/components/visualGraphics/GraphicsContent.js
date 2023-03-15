@@ -45,7 +45,7 @@ const options = {
 };
 
 const GraphicsContent = (props) => {
-  const { endDate, startDate, timePeriod, timeMultiplier, separateDataBy, chartType, setChartType, setTimePeriod } = useContext(GraphicsContext);
+  const { endDate, startDate, timePeriod, timeMultiplier, separateDataBy, chartType, setChartType, setTimePeriod, chartProcessName } = useContext(GraphicsContext);
 
   const [data, setData] = useState([
     { name: "Jan", value: 100 },
@@ -63,30 +63,28 @@ const GraphicsContent = (props) => {
   ]);
 
   useEffect(() => {
-    console.log("data legal")
     // Get the file names and check if they exists
     GetFilesNamesBetweenDates(startDate, endDate).then(async (filesNames) => {
-
       // Open the file by its name, and filters the files that dont have at least one of the specified processes
-      let processFilters = [props.chartProcessName];
+      let processFilters = [chartProcessName];
       const filteredFiles = await FilterFilesToSpecificProcesses(filesNames, processFilters);
 
-      const chartData = HandleChartData(filteredFiles, timePeriod, startDate, endDate, props.chartProcessName, timeMultiplier, separateDataBy);
+      const chartData = HandleChartData(filteredFiles, timePeriod, startDate, endDate, chartProcessName, timeMultiplier, separateDataBy);
       setData(chartData);
     });
   }, [startDate, endDate, timePeriod, timeMultiplier, separateDataBy]);
 
   return (
-      <div className="graphics-content">
-        <div className="graphics-main">
-          <GraphicsHeader />
-          <Chart chartType={chartType} data={data}></Chart>
-          {/* <Graphic></Graphic> */}
-        </div>
-        <div className="graphics-side-bottom">
-          <GraphicsFilters chartType={chartType} setChartType={setChartType}></GraphicsFilters>
-        </div>
+    <div className="graphics-content">
+      <div className="graphics-main">
+        <GraphicsHeader />
+        <Chart chartType={chartType} data={data}></Chart>
+        {/* <Graphic></Graphic> */}
       </div>
+      <div className="graphics-side-bottom">
+        <GraphicsFilters chartType={chartType} setChartType={setChartType}></GraphicsFilters>
+      </div>
+    </div>
   );
 };
 
@@ -139,49 +137,96 @@ const HandleChartData = (filesName, timePeriod, startDate, endDate, chartProcess
   datesAndValues.forEach((element) => {
     // day - month - year
     const newName =
-      element.date.getDate().toString().padStart(2, "0") + "-" + (element.date.getMonth() + 1).toString().padStart(2, "0") + "-" + element.date.getFullYear();
+      (element.date.getMonth() + 1).toString().padStart(2, "0") + "-" + element.date.getDate().toString().padStart(2, "0") + "-" + element.date.getFullYear();
     datesAndValues[datesAndValues.indexOf(element)] = { name: newName, value: parseFloat((element.value / timeMultiplier).toFixed(2)), date: element.date };
   });
 
-  console.log(datesAndValues);
-
   // Separate data by
+  let newData = [];
+  let currentDate = new Date(datesAndValues[0].date);
+  let newSeparatedDataAndValue = null;
   switch (separateDataBy) {
     case "days":
       return datesAndValues;
       break;
     case "weeks":
-      break;
-    case "months":
-      let newData = [];
-      console.log(endDate);
-      console.log(startDate);
-      const differenceMonths = Math.min(differenceInMonths(endDate, startDate), 1);
-      console.log(differenceMonths);
-      let currentMonth = new Date(startDate);
-      console.log(differenceMonths);
-      for (let i = 0; i < differenceMonths; i++) {
-        currentMonth.setDate(1);
-        const currentMonthName = `${(currentMonth.getMonth() + 1).toString().padStart(2, "0")}-${currentMonth.getFullYear()}`;
-        const today = new Date();
+      let startDateWeekDay = 0;
+      let lastStartDateWeekDay = 0;
 
-        var lastDayOfMonth = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
-        let newMonth = datesAndValues.filter((x) => {
-          console.log(x.date);
-          console.log(startDate);
-          console.log(endDate);
-          console.log(new Date(x.date) >= startDate);
-          console.log(new Date(x.date) <= lastDayOfMonth);
-          return x.date >= startDate && x.date <= lastDayOfMonth;
-        });
-        console.log(datesAndValues);
-        console.log(newMonth);
-        newData = [...newData, newMonth];
+      // Iterate through every data
+      for (let i = 0; i < datesAndValues.length; i++) {
+        startDateWeekDay = datesAndValues[i].date.getDay(); // Day of the week, starting from 0 (sunday)
+        if (startDateWeekDay === 0 || i === 0) {
+          if (newSeparatedDataAndValue != null) {
+            newData.push(newSeparatedDataAndValue);
+            newSeparatedDataAndValue = {};
+          }
+          newSeparatedDataAndValue = datesAndValues[i];
+        } else if (startDateWeekDay > 0) {
+          newSeparatedDataAndValue.value += datesAndValues[i].value;
+        }
+
+        // If its the last iteration then add the last unfinished array
+        if (i == datesAndValues.length - 1) {
+          newData.push(newSeparatedDataAndValue);
+          newSeparatedDataAndValue = {};
+        }
+
+        lastStartDateWeekDay = startDateWeekDay;
+        currentDate.setDate(currentDate.getDate() + 1);
       }
-      console.log(newData);
-      return newData[0];
+      return newData;
+    case "months":
+      // Iterate through every data
+      for (let i = 0; i < datesAndValues.length; i++) {
+        if (i === 0) {
+          newSeparatedDataAndValue = datesAndValues[i];
+        }
+
+        if (
+          datesAndValues[i].date.getMonth() === newSeparatedDataAndValue.date.getMonth() &&
+          datesAndValues[i].date.getFullYear() === newSeparatedDataAndValue.date.getFullYear()
+        ) {
+          newSeparatedDataAndValue.value += datesAndValues[i].value;
+        } else {
+          newData.push(newSeparatedDataAndValue);
+          newSeparatedDataAndValue = datesAndValues[i];
+        }
+
+        if (i === datesAndValues.length - 1) {
+          // If its the last iteration then add the last unfinished array
+          newData.push(newSeparatedDataAndValue);
+        }
+
+        lastStartDateWeekDay = startDateWeekDay;
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      return newData;
     case "years":
-      break;
+      // Iterate through every data
+      for (let i = 0; i < datesAndValues.length; i++) {
+        if (i === 0) {
+          newSeparatedDataAndValue = datesAndValues[i];
+        }
+
+        if (
+          datesAndValues[i].date.getFullYear() === newSeparatedDataAndValue.date.getFullYear()
+        ) {
+          newSeparatedDataAndValue.value += datesAndValues[i].value;
+        } else {
+          newData.push(newSeparatedDataAndValue);
+          newSeparatedDataAndValue = datesAndValues[i];
+        }
+
+        if (i === datesAndValues.length - 1) {
+          // If its the last iteration then add the last unfinished array
+          newData.push(newSeparatedDataAndValue);
+        }
+
+        lastStartDateWeekDay = startDateWeekDay;
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      return newData;
   }
 };
 
