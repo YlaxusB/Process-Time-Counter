@@ -1,5 +1,5 @@
 import { userInfo } from "os";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import RemoveButton from "./RemoveButton";
 
 const os = window.require("os");
@@ -32,73 +32,52 @@ function checkboxClicked(e, setFilters) {
   }
 }
 const fetchFilters = async (setFilters) => {
-  setFilters(
-    await readFileSync(mainAppFolder + "/Filters.json").MainWindowTitle
-  );
+  setFilters(await readFileSync(mainAppFolder + "/Filters.json").MainWindowTitle);
 };
 
 async function addProcessToFilters(e, setFilters) {
   const oldFilters = await readFileSync(mainAppFolder + "/Filters.json");
   // Check if this process is not already filtered
-  let nameComparator =
-    oldFilters.MainWindowTitle.find((x) => x.MainWindowTitle == e.target.id) ==
-    undefined;
+  let nameComparator = oldFilters.MainWindowTitle.find((x) => x.MainWindowTitle == e.target.id) == undefined;
 
   if (nameComparator || oldFilters.MainWindowTitle.length == 0) {
     let newFilterJSON = oldFilters;
     newFilterJSON.MainWindowTitle.push(e.target.id); // e.target.id is the name of process to add into filters json
 
-    await saveFile(
-      mainAppFolder + "/Filters.json",
-      JSON.stringify(newFilterJSON)
-    );
-    fetchFilters(setFilters);
+    await saveFile(mainAppFolder + "/Filters.json", JSON.stringify(newFilterJSON));
+    setFilters(fetchFilters(setFilters));
   }
 }
 
 // Get the name of the clicked filter, find the index of this name in the filters file, get the filters and remove the process by index then saves
 async function removeProcessFromFilters(filterToRemove, setFilters) {
   const oldFilters = await readFileSync(mainAppFolder + "/Filters.json");
-  const filterIndex = oldFilters.MainWindowTitle.findIndex(
-    (element) => element == filterToRemove
-  );
+  const filterIndex = oldFilters.MainWindowTitle.findIndex((element) => element == filterToRemove);
   let newFilters = oldFilters.MainWindowTitle;
   newFilters.splice(filterIndex, 1);
   const newFiltersJSON = oldFilters;
   newFiltersJSON.MainWindowTitle = newFilters;
-  await saveFile(
-    mainAppFolder + "/Filters.json",
-    JSON.stringify(newFiltersJSON)
-  );
-  fetchFilters(setFilters);
+  await saveFile(mainAppFolder + "/Filters.json", JSON.stringify(newFiltersJSON));
+  setFilters(fetchFilters(setFilters));
 }
-const ListButtons = (
-  processName,
-  checkboxValue,
-  setFilters,
-  overlayState,
-  setOverlayState
-) => {
+
+//(processName, checkboxValue, setFilters, overlayState, setOverlayState, filters)
+const ListButtons = (props) => {
   return (
-    <div className="buttons-container" style={{display:"flex"}}>
+    <div className="buttons-container" style={{ display: "flex" }}>
       <input
         className="filter-checkbox"
         type={"checkbox"}
         onChange={(e) => {
-          checkboxClicked(e, setFilters);
+          checkboxClicked(e, props.setFilters);
         }}
-        id={processName}
-        checked={checkboxValue}
-      ></input>
-      <RemoveButton
-      overlayState={overlayState}
-      setOverlayState={setOverlayState}
-      processName={processName}
-      setFilters={setFilters}
+        id={props.processName}
+        checked={props.checkboxValue}
       />
+      <RemoveButton overlayState={props.overlayState} setOverlayState={props.setOverlayState} processName={props.processName} setFilters={props.setFilters} />
     </div>
   );
 };
 
 //export default ListButtons;
-export {removeProcessFromFilters, ListButtons}
+export { removeProcessFromFilters, ListButtons };

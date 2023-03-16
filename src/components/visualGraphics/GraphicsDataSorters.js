@@ -228,7 +228,7 @@ const CustomPeriod = (props) => {
         <input
           onChange={(e) => {
             const input = e.target.value;
-            var splited = input.split("-");
+            let splited = input.split("-");
             let date = new Date();
             date.setDate(parseFloat(splited[0]));
             date.setMonth(parseFloat(splited[1]));
@@ -259,7 +259,7 @@ const CustomPeriod = (props) => {
           value={`${props.endDate.getDate()}/${props.endDate.getMonth() + 1}/${props.endDate.getFullYear()}`}
           onChange={(e) => {
             const input = e.target.value;
-            var splited = input.split("-");
+            let splited = input.split("-");
             let date = new Date();
             date.setDate(parseFloat(splited[0]));
             date.setMonth(parseFloat(splited[1]) - 1);

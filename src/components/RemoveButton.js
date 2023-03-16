@@ -11,7 +11,7 @@ const RemoveButton = (props) => {
   };
 
   return (
-    <div>
+    <div className="removeButtonDiv">
       {isTryingRemove && <RemoveOverlay setIsTryingRemove={setIsTryingRemove} processName={props.processName} setFilters={props.setFilters}></RemoveOverlay>}
 
       <button

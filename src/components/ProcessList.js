@@ -10,7 +10,7 @@ const username = os.userInfo().username;
 const mainAppFolder = `C:/Users/${username}/AppData/Roaming/Process Time Counter`;
 
 const ProcessList = (props) => {
-  const {setChartProcessName} = useContext(GraphicsContext);
+  const { setChartProcessName } = useContext(GraphicsContext);
   //const [isGraphicsOverlayOpen, setIsGraphicsOverlayOpen] = useState(false);
 
   // Check if date range is enabled
@@ -76,13 +76,27 @@ const ProcessList = (props) => {
           <tr
             className="process"
             key={index}
-            onClick={() => processNameClicked(props.isGraphicsOverlayOpen, props.setIsGraphicsOverlayOpen, element.MainWindowTitle, setChartProcessName)}
+            onClick={(e) => {
+              console.log(e.target.nodeName)
+              if (e.target.nodeName != "INPUT" && e.target.nodeName != "IMG") {
+                processNameClicked(props.isGraphicsOverlayOpen, props.setIsGraphicsOverlayOpen, element.MainWindowTitle, setChartProcessName);
+              }
+            }}
           >
             <td className="processName" title={element.MainWindowTitle}>
               {abbreviatedProcessName}
               {/* <span>{element.MainWindowTitle}</span> */}
             </td>
-            <td>{ListButtons(element.MainWindowTitle, checkboxValue, props.overlayState, props.setOverlayState)}</td>
+            {/* element.MainWindowTitle, checkboxValue, props.overlayState, props.setOverlayState, props.setFilters, props.filters */}
+            <td>
+              <ListButtons
+                processName={element.MainWindowTitle}
+                checkboxValue={checkboxValue}
+                overlayState={props.overlayState}
+                setFilters={props.setFilters}
+                filters={props.filters}
+              />
+            </td>
             {props.mode == "filtered" && <td>{element.Time >= 60 ? Math.round(element.Time / 60) + " hours" : element.Time + " min"}</td>}
           </tr>
         );

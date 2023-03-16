@@ -23,7 +23,7 @@ const RemoveOverlay = (props) => {
 
   const DeleteButtonClicked = async () => {
     // Delete in each session file
-    var files = fs.readdirSync(mainAppFolder + "/Sessions Json");
+    const files = fs.readdirSync(mainAppFolder + "/Sessions Json");
     files.forEach((fileName) => {
       let fileProcesses = readFileSync(mainAppFolder + "/Sessions Json/" + fileName);
       if (fileProcesses.find((x) => x.MainWindowTitle == props.processName) != undefined) {

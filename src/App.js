@@ -256,7 +256,7 @@ function App() {
                   }}
                   onChange={(e) => {
                     const input = e.target.value;
-                    var splited = input.split("-");
+                    let splited = input.split("-");
                     let date = new Date();
                     date.setDate(parseFloat(splited[0]));
                     date.setMonth(parseFloat(splited[1]));
@@ -278,7 +278,7 @@ function App() {
                   value={`${dateTo.getDate()}/${dateTo.getMonth() + 1}/${dateTo.getFullYear()}`}
                   onChange={(e) => {
                     const input = e.target.value;
-                    var splited = input.split("-");
+                    let splited = input.split("-");
                     let date = new Date();
                     date.setDate(parseFloat(splited[0]));
                     date.setMonth(parseFloat(splited[1]) - 1);
