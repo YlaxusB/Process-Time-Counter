@@ -7,7 +7,6 @@
   "homepage": "./",
   "electron-dev": "set ELECTRON_START_URL=http://localhost:3000 && electron .",
   "devDependencies": {
-    "types": "electron",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -18,7 +17,7 @@
     "concurrently": "^7.4.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
-    "electron": "^21.2.2",
+    "electron": "^21.4.4",
     "electron-builder": "^23.6.0",
     "electron-is-dev": "^2.0.0",
     "fs": "^0.0.1-security",
@@ -90,7 +89,6 @@
     ]
   },
   "dependencies": {
-    "fs": "^0.0.1-security",
     "@electron/remote": "^2.0.8",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -105,6 +103,7 @@
     "electron-is-dev": "^2.0.0",
     "electron-log": "^4.4.8",
     "faker": "^6.6.6",
+    "fs": "^0.0.1-security",
     "http-proxy-middleware": "^2.0.6",
     "menu": "^0.2.5",
     "promisify": "^0.0.3",
